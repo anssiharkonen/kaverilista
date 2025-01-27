@@ -1,0 +1,71 @@
+// Ensimmäinen versio: Kymmenen kaverin nimien käsittely
+// Luodaan yksinkertainen HTML + JavaScript-sovellus
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaverilista</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #friend-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kaverilista</h1>
+    <p>Syötä kymmenen kaverin nimet:</p>
+
+    <div id="input-container">
+        <input type="text" id="friend-name" placeholder="Syötä kaverin nimi">
+        <button onclick="addFriend()">Lisää</button>
+    </div>
+
+    <p id="feedback" style="color: red;"></p>
+
+    <div id="friend-list">
+        <h2>Kaverit:</h2>
+        <ul id="friends"></ul>
+    </div>
+
+    <script>
+        const friends = [];
+
+        function addFriend() {
+            const input = document.getElementById('friend-name');
+            const feedback = document.getElementById('feedback');
+            const friendName = input.value.trim();
+
+            if (friendName === '') {
+                feedback.textContent = 'Nimi ei voi olla tyhjä!';
+                return;
+            }
+
+            if (friends.length >= 10) {
+                feedback.textContent = 'Olet jo lisännyt 10 kaveria!';
+                return;
+            }
+
+            feedback.textContent = '';
+            friends.push(friendName);
+            input.value = '';
+            updateFriendList();
+        }
+
+        function updateFriendList() {
+            const list = document.getElementById('friends');
+            list.innerHTML = '';
+            friends.forEach((friend, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${index + 1}. ${friend}`;
+                list.appendChild(listItem);
+            });
+        }
+    </script>
+</body>
+</html>
