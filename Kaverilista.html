@@ -1,6 +1,3 @@
-// Ensimmäinen versio: Kymmenen kaverin nimien käsittely
-// Luodaan yksinkertainen HTML + JavaScript-sovellus
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,22 +12,45 @@
         #friend-list {
             margin-top: 20px;
         }
+        button {
+            margin-left: 5px;
+            padding: 5px 10px;
+        }
+        .friend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .friend-item button {
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 3px 8px;
+            border-radius: 5px;
+        }
+        .friend-item button:hover {
+            background-color: darkred;
+        }
     </style>
 </head>
 <body>
     <h1>Kaverilista</h1>
-    <p>Syötä kymmenen kaverin nimet:</p>
+    <p>Syötä kaverin nimi:</p>
 
     <div id="input-container">
         <input type="text" id="friend-name" placeholder="Syötä kaverin nimi">
         <button onclick="addFriend()">Lisää</button>
+        <button onclick="sortFriendsAscending()">Lajittele A-Ö</button>
+        <button onclick="sortFriendsDescending()">Lajittele Ö-A</button>
     </div>
 
     <p id="feedback" style="color: red;"></p>
 
     <div id="friend-list">
         <h2>Kaverit:</h2>
-        <ul id="friends"></ul>
+        <div id="friends"></div>
     </div>
 
     <script>
@@ -51,21 +71,53 @@
                 return;
             }
 
+            if (friends.includes(friendName)) {
+                feedback.textContent = 'Tämä nimi on jo listalla!';
+                return;
+            }
+
             feedback.textContent = '';
             friends.push(friendName);
             input.value = '';
             updateFriendList();
         }
 
+        function removeFriend(index) {
+            friends.splice(index, 1);
+            updateFriendList();
+        }
+
+        function sortFriendsAscending() {
+            friends.sort((a, b) => a.localeCompare(b, 'fi'));
+            updateFriendList();
+        }
+
+        function sortFriendsDescending() {
+            friends.sort((a, b) => b.localeCompare(a, 'fi'));
+            updateFriendList();
+        }
+
         function updateFriendList() {
-            const list = document.getElementById('friends');
-            list.innerHTML = '';
+            const listContainer = document.getElementById('friends');
+            listContainer.innerHTML = '';
+
             friends.forEach((friend, index) => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `${index + 1}. ${friend}`;
-                list.appendChild(listItem);
+                const listItem = document.createElement('div');
+                listItem.className = 'friend-item';
+
+                const friendText = document.createElement('span');
+                friendText.textContent = `${index + 1}. ${friend}`;
+
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Poista';
+                removeButton.onclick = () => removeFriend(index);
+
+                listItem.appendChild(friendText);
+                listItem.appendChild(removeButton);
+                listContainer.appendChild(listItem);
             });
         }
     </script>
 </body>
 </html>
+
